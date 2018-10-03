@@ -1,4 +1,3 @@
-/* jshint node:true */
 'use strict';
 module.exports = function (grunt) {
   var os = require('os');
@@ -12,6 +11,10 @@ module.exports = function (grunt) {
     platform: process.platform.replace('win32', 'windows'),
   };
 
+  if (grunt.option('platform')) {
+    config.platform = grunt.option('platform');
+  }
+
   if (grunt.option('arch')) {
     config.arch = grunt.option('arch');
   } else {
@@ -23,15 +26,15 @@ module.exports = function (grunt) {
   }
 
   config.phjs = grunt.option('phjsToRelease');
-
   config.pkg.version = grunt.option('pkgVer') || config.pkg.version;
+
   console.log('Version', config.pkg.version);
 
   // load plugins
   require('load-grunt-tasks')(grunt);
 
   // load task definitions
-  grunt.loadTasks('tasks');
+  grunt.loadTasks('./scripts/grunt');
 
   // Utility function to load plugin settings into config
   function loadConfig(config,path) {
@@ -46,7 +49,7 @@ module.exports = function (grunt) {
   }
 
   // Merge that object with what with whatever we have here
-  loadConfig(config,'./tasks/options/');
+  loadConfig(config,'./scripts/grunt/options/');
   // pass the config to grunt
   grunt.initConfig(config);
 };
